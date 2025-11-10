@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "https://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!-- 🌐 Cấu hình toàn cục -->
+    <constant name="struts.locale" value="vi_VN"/>
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.action.extension" value="action"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.custom.i18n.resources" value="i18n/messages"/>
+
+    <!-- Trang chủ (root) -->
+    <package name="root" namespace="/" extends="struts-default">
+        <interceptors>
+            <interceptor-stack name="i18nStack">
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="i18nStack"/>
+
+        <default-action-ref name="goHome"/>
+        <action name="goHome">
+            <result type="redirect">product/list</result>
+        </action>
+    </package>
+
+    <!-- 🧱 Product Package -->
+    <package name="product" namespace="/product" extends="struts-default">
+        <interceptors>
+            <interceptor-stack name="i18nStack">
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="i18nStack"/>
+
+        <action name="list" class="com.action.ProductAction" method="execute">
+            <result name="success">/product/product.jsp</result>
+        </action>
+
+        <action name="addForm" class="com.action.ProductAction">
+            <result>/product/add_product.jsp</result>
+        </action>
+
+        <action name="add" class="com.action.ProductAction" method="add">
+            <result name="success" type="redirectAction">
+                <param name="actionName">list</param>
+                <param name="namespace">/product</param>
+            </result>
+        </action>
+
+
+        <action name="edit" class="com.action.ProductAction" method="edit">
+            <result name="edit">/product/edit_product.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="update" class="com.action.ProductAction" method="update">
+            <result name="success" type="redirectAction">
+                <param name="actionName">list</param>
+                <param name="namespace">/product</param>
+            </result>
+        </action>
+
+        <!-- Xóa sản phẩm -->
+        <action name="delete" class="com.action.ProductAction" method="delete">
+            <result name="success" type="redirectAction">
+                <param name="actionName">list</param>
+                <param name="namespace">/product</param>
+            </result>
+        </action>
+    </package>
+</struts>
