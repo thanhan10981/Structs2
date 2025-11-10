@@ -13,10 +13,15 @@
 
 <div class="toolbar">
     <div class="left">
-        <a class="btn-add" href="<s:url action='addForm' namespace='/product'/>">+ <s:text name="btn.add"/></a>
+        <!-- 🟦 Nút thêm, giữ lang -->
+        <s:url var="addUrl" action="addForm" namespace="/product">
+            <s:param name="lang" value="%{lang}"/>
+        </s:url>
+        <a class="btn-add" href="${addUrl}">+ <s:text name="btn.add"/></a>
     </div>
 
     <div class="right">
+        <!-- 🟩 Form chọn ngôn ngữ -->
         <form action="<s:url action='list' namespace='/product'/>" method="get">
             <label><s:text name="label.selectLanguage"/>:</label>
             <select name="lang">
@@ -57,30 +62,35 @@
             <td><s:property value="price"/></td>
             <td><s:property value="weight"/></td>
             <td><s:property value="categoryName"/></td>
+
             <td>
-                <!-- URL edit -->
+                <!-- 🟨 Nút Sửa -->
                 <s:url var="editUrl" action="edit" namespace="/product">
                     <s:param name="id" value="%{id}"/>
+                    <s:param name="lang" value="%{lang}"/>
                 </s:url>
                 <a href="${editUrl}"><s:text name="btn.edit"/></a>
 
                 &nbsp;|&nbsp;
-                <!-- URL delete -->
-                <s:url var="delBase" action="delete" namespace="/product"/>
-                <a href="javascript:void(0)" onclick="confirmDelete('${delBase}', <s:property value='id'/>)">
+
+                <!-- 🟥 Nút Xoá -->
+                <s:url var="delUrl" action="delete" namespace="/product">
+                    <s:param name="lang" value="%{lang}"/>
+                </s:url>
+                <a href="javascript:void(0)" onclick="confirmDelete('${delUrl}', <s:property value='id'/>)">
                     <s:text name="btn.delete"/>
                 </a>
             </td>
         </tr>
     </s:iterator>
-
 </table>
 
 <script>
+    // 🧩 Xác nhận xóa có giữ ngôn ngữ
     function confirmDelete(baseUrl, id) {
         const msg = "<s:text name='msg.confirmDelete'/>";
         if (confirm(msg + " " + id + "?")) {
-            window.location.href = baseUrl + "?id=" + id;
+            window.location.href = baseUrl + "&id=" + id;
         }
     }
 </script>
